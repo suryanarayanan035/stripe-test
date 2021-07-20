@@ -1,0 +1,37 @@
+service:
+  name: stripe-backend
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ap-south-1
+  profile: adshiker
+custom:
+  apiHeaders:
+    - Content-Type
+    - X-Amz-Date
+    - X-Api-Key
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
+    - Authorization
+    - Access-Token
+    - Access-Control-Allow-Origin
+    - Access-Control-Allow-Credentials
+    - Access-Control-Allow-Methods
+    - Access-Control-Allow-Headers
+
+plugins:
+  - serverless-webpack
+
+functions:
+  paymentLambda:
+    name: payment-lambda
+    handler: src/modules/server/index.handler
+  
+    events:
+      - http:
+          path: /pay
+          method: post
+          cors:
+            origin: '*'
+            headers: ${self:custom.apiHeaders}
